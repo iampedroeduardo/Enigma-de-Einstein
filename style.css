@@ -1,0 +1,106 @@
+body{
+    background-color: black;
+}
+.linha{
+    width: 450px;
+    display: flex;
+    flex-wrap: wrap;
+    margin: auto;
+}
+.fotinha{
+    width: 45px;
+    height: 45px;
+}
+.quadrado{
+    width: 110px;
+    height: 110px;
+    display: flex;
+    flex-wrap: wrap;
+    border: 1px solid white;
+    justify-content: center;
+    align-items: center;
+}
+#tabuleiro{
+    margin: auto;
+}
+#quadrinho{
+    margin: auto;
+    display: flex;
+    flex-wrap: wrap;
+    width: 154px;
+}
+.quadradinho{
+    width: 75px;
+    height: 75px;
+    border: 1px solid white;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.foto{
+    width: 60px;
+    height: 60px;
+}
+.fotona{
+    width: 100px;
+    height: 100px;
+}
+#dicas{
+    width: 293px;
+    height: 152px;
+    border: 1px solid white;
+}
+#barra{
+    width: 449px;
+    display: flex;
+    flex-wrap: wrap;
+    margin: auto;
+}
+p{
+    color: white;
+}
+#controle{
+    display: flex;
+    flex-wrap: wrap;
+    width: 291px;
+    border-bottom: 1px solid white;
+    height: 20px;
+}
+#left{
+    font-size: 15px;
+    height: 20px;
+    margin: 0;
+    width: 20px;
+    text-align: center;
+    align-content: center;
+    cursor: pointer;
+}
+#numero{
+    font-size: 15px;
+    height: 20px;
+    margin: 0;
+    width: 249px;
+    text-align: center;
+    align-content: center;
+    border-left: 1px solid white;
+    border-right: 1px solid white;
+}
+#right{
+    font-size: 15px;
+    height: 20px;
+    margin: 0;
+    width: 20px;
+    text-align: center;
+    align-content: center;
+    cursor: pointer;
+}
+#dicaa{
+    justify-content: center;
+    align-items: center;
+    display: flex;
+}
+#dica{
+    font-size: 20px;
+    text-align: center;
+}
