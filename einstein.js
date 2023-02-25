@@ -29,18 +29,37 @@ function CriaTab(){
                     img.src="Imagens/"+opcoes[c][j]+".png";
                     img.setAttribute("class","fotinha")
                     img.setAttribute("style","opacity:"+tabuleiro[c][i][j]);
+                    img.setAttribute("id",""+c+i+j);
                     div2.appendChild(img);
                 }
             }
             else{
                 img=new Image();
                 img.src="Imagens/"+tab[c][i]+".png";
-                img.setAttribute("class","fotona")
+                img.setAttribute("class","fotona");
+                img.setAttribute("id","foto"+c+i);
                 div2.appendChild(img);
+                relacoes[c][i]=tab[c][i];
             }
             div.appendChild(div2);
         }
     }
+}
+function Coloca(linha,coluna,j){
+    img=document.getElementById(""+linha+coluna+j);
+    img.setAttribute("style","opacity:1.0");
+    tabuleiro[linha][coluna][j]="1.0";
+    img=document.getElementById("foto"+j);
+    img.setAttribute("style","opacity:1.0");
+    img.setAttribute("onclick","Tira("+linha+","+coluna+","+j+");");
+}
+function Tira(linha,coluna,j){
+    img=document.getElementById(""+linha+coluna+j);
+    img.setAttribute("style","opacity:0.3");
+    tabuleiro[linha][coluna][j]="0.3";
+    img=document.getElementById("foto"+j);
+    img.setAttribute("style","opacity:0.3");
+    img.setAttribute("onclick","Coloca("+linha+","+coluna+","+j+");");
 }
 function Seleciona(linha,coluna){
     quadrado=document.getElementById(""+linha+coluna);
@@ -56,6 +75,10 @@ function Seleciona(linha,coluna){
             img=document.getElementById("foto"+c);
             img.parentNode.removeChild(img);
         }
+        div=document.getElementById(""+linha+coluna);
+        img=new Image();
+        img.src="Imagens/"+opcoes[linha][coluna]+".png";
+        img.setAttribute("class","fotona");
     }
     for(c=0;c<4;c++){
         div=document.getElementById("quadrado"+c);
@@ -64,8 +87,95 @@ function Seleciona(linha,coluna){
         img.setAttribute("id","foto"+c);
         img.setAttribute("class","foto");
         img.setAttribute("style","opacity:"+tabuleiro[linha][coluna][c]);
+        if(linha>0){
+            if(tabuleiro[linha][coluna][c]=="1.0"){
+                img.setAttribute("onclick","Tira("+linha+","+coluna+","+c+");");
+            }
+            else{
+                img.setAttribute("onclick","Coloca("+linha+","+coluna+","+c+");");
+            }
+            img.setAttribute("ondblclick","Destaca("+linha+","+coluna+","+c+");");
+        }
         console.log(tabuleiro[linha][coluna][c]);
         div.appendChild(img);
+    }
+}
+function Destaca(linha,coluna,j){
+    for(c=0;c<4;c++){
+        img=document.getElementById(""+linha+coluna+c);
+        img.parentNode.removeChild(img);
+        if(c!=j){
+            tabuleiro[linha][coluna][c]="0.3";
+            if(document.getElementById("foto"+c)!=null){
+                img=document.getElementById("foto"+c);
+                img.setAttribute("style","opacity:0.3");
+            }
+        }
+    }
+    for(c=0;c<4;c++){
+        if(c!=coluna){
+            tabuleiro[linha][c][j]="0.3";
+            if(document.getElementById(""+linha+c+j)!=null){
+                img=document.getElementById(""+linha+c+j);
+                img.setAttribute("style","opacity:0.3;");
+            }
+        }
+    }
+    img= new Image();
+    tabuleiro[linha][coluna][j]="1.0";
+    img.src="Imagens/"+opcoes[linha][j]+".png";
+    div=document.getElementById(""+linha+coluna);
+    img.setAttribute("class","fotona");
+    img.setAttribute("id","foto"+linha+coluna)
+    div.appendChild(img);
+    img=document.getElementById("foto"+j);
+    img.style.opacity="1.0";
+    relacoes[linha][coluna]=opcoes[linha][j];
+    Testa();
+}
+function TestaFinal(){
+    tof=false;
+    for(c=0;c<4;c++){
+        for(i=0;i<4;i++){
+            if(relacoes[c][i]==tab[c][i]){
+                tof=true;
+            }
+        }
+    }
+    if(tof){
+        tela=[
+            '<div class="container">',
+            '    <div class="box">',
+            '        <h1>Parabéns! Você ganhou!</h1>',
+            '        <a href="index.html"><button class="botao">Jogar Novamente</button></a>',
+            '    <div>',
+            '</div>'
+        ]
+        setTimeout(()=>{document.querySelector("body").innerHTML=tela.join("\n")},500);
+    }
+    else{
+        tela=[
+            '<div class="container">',
+            '    <div class="box">',
+            '        <h1>Parabéns! Você perdeu!</h1>',
+            '        <a href="index.html"><button class="botao">Tentar Novamente</button></a>',
+            '    <div>',
+            '</div>'
+        ]
+        setTimeout(()=>{document.querySelector("body").innerHTML=tela.join("\n")},500);
+    }
+}
+function Testa(){
+    tof=true;
+    for(c=0;c<4;c++){
+        for(i=0;i<4;i++){
+            if(document.getElementById("foto"+c+i)==null){
+                tof=false;
+            }
+        }
+    }
+    if(tof){
+        TestaFinal();
     }
 }
 function GeraOpacidades(){
@@ -90,9 +200,11 @@ function TiraOpacidades(){
 }
 function GeraDicas(){
     for(c=0;c<4;c++){
-        nums=[2,3];
-        n=nums[Math.floor(Math.random()*2)];
-        for(i=0;i<n;i++){
+        nums=[3,2,1,1];
+        n=Math.floor(Math.random()*nums.length);
+        num=nums[n];
+        nums.splice(n,1);
+        for(i=0;i<num;i++){
             tof=false;
             do{
                 linha=tab[Math.ceil(Math.random()*3)];
@@ -130,8 +242,8 @@ function GeraDicas(){
             dicas.push(dica);
         }
     }
-    soun=[" "," "," "," "," não "," não "," não "," não "," não "," não "];
-    for(c=0;c<10;c++){
+    soun=[" "," "," "," "," não "," não "," não "," não "," não "," não "," "," não "];
+    for(c=0;c<12;c++){
         tof=true;
         do{
             nums=[1,2,3];
@@ -185,6 +297,17 @@ function GeraDicas(){
         dicas.push(dica);
         soun.splice(n3,1);
     }
+    dicas2=[];
+    for(c=0;c<dicas.length;c++){
+        dicas2[c]=dicas[c];
+    }
+    dicas=[]
+    tam=dicas2.length;
+    for(c=0;c<tam;c++){
+        n=Math.floor(Math.random()*dicas2.length);
+        dicas.push(dicas2[n]);
+        dicas2.splice(n,1);
+    }
 }
 function ColocaDica(){
     num=1;
@@ -194,14 +317,25 @@ function ColocaDica(){
     dica.innerHTML=dicas[0];
 }
 function VoltaDica(){
-    num--;
+    if(num>1){
+        num--;
+    }
+    else{
+        num=dicas.length;
+    }
     numero=document.getElementById("numero");
     numero.innerHTML="Dica: "+num;
     dica=document.getElementById("dica");
     dica.innerHTML=dicas[num-1];
 }
 function AumentaDica(){
-    num++;
+    if(num<dicas.length){
+        num++;
+        
+    }
+    else{
+        num=1;
+    }
     numero=document.getElementById("numero");
     numero.innerHTML="Dica: "+num;
     dica=document.getElementById("dica");
@@ -212,7 +346,7 @@ var tab=[];
 var tabuleiro=[];
 var dicas=[];
 var num;
-var relacoes=[]
+var relacoes=[[],[],[],[]];
 SorteiaTab();
 GeraOpacidades();
 CriaTab();
